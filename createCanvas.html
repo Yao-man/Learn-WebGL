@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>firstWebGL</title>
+    <style>
+        html,
+        body {
+            background-color: #9c9c9c;
+        }
+
+        canvas {
+            border: 1px solid brown;
+            height: 500px;
+            width: 500px;
+        }
+    </style>
+    <script>
+        var webgl = null;
+
+        function Inti() {
+            var _canvas = document.getElementById("target");
+            webgl = _canvas.getContext("webgl"); //获取对象
+            webgl.viewport(0, 0, _canvas.clientWidth, _canvas.clientHeight); //可视区
+            webgl.clearColor(0.0, 156 / 255.0, 200.0 / 255, 1.0); //背景颜色(R G B a)
+            webgl.clear(webgl.COLOR_BUFFER_BIT);
+        }
+    </script>
+</head>
+
+<body onload="Inti()">
+    <canvas id="target">
+    </canvas>
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL02</title>
+
+    <script id="shader-vs">
+        /*顶点着色器attribute vec3 v3Position;
+        void main(void) {
+            gl_Position = vec4(v3Position, 1.0);
+        }*/
+    </script>
+
+    <script id="shader-fs">
+        /*片元着色器void main(void) {
+            gl_FragColor = vec4(0.7, 0.5, 0.6, 0.9);
+        }*/
+    </script>
+    <style>
+        html,
+        body {
+            background-color: #9c9c9c;
+        }
+
+        canvas {
+            border: 1px solid brown;
+            height: 800px;
+            width: 800px;
+        }
+    </style>
+    <script>
+        var webgl = null; //上下文
+        var vertexShaderObj = null; //片元着色器
+        var fragmentShaderObj = null; //
+        var programObj = null;
+        var triangleBuffer = null;
+        var v3PositionIndex = 0;
+        var /*顶点着色器*/
+            vs_str = `attribute vec3 v3Position;` +
+            `void main() {` +
+            `gl_Position = vec4(v3Position, 1.0);}`,
+
+            /*片元着色器*/
+            fs_str = `void main() {` +
+            `gl_FragColor = vec4(1.0, 0.0, 0.0, 0.5);}`;
+
+        function Inti() {
+            var _canvas = document.getElementById("target");
+            webgl = _canvas.getContext("webgl"); //获取对象/上下文
+            webgl.viewport(0, 0, _canvas.clientWidth, _canvas.clientHeight); //可视区大小
+
+
+            vertexShaderObj = webgl.createShader(webgl.VERTEX_SHADER); //创建顶点着色器
+            fragmentShaderObj = webgl.createShader(webgl.FRAGMENT_SHADER); //创建片元着色器
+
+            /* 给着色器绑定 数据源 */
+            webgl.shaderSource(vertexShaderObj, vs_str);
+            webgl.shaderSource(fragmentShaderObj, fs_str);
+
+            /*编译 着色器*/
+            webgl.compileShader(vertexShaderObj);
+            webgl.compileShader(fragmentShaderObj);
+
+            /*判断是否已经存在着色器*/
+            if (!webgl.getShaderParameter(vertexShaderObj, webgl.COMPILE_STATUS)) {
+                console.log('error:vertexShaderObj');
+                return;
+            }
+
+            if (!webgl.getShaderParameter(fragmentShaderObj, webgl.COMPILE_STATUS)) {
+                console.log('error:fragmentShaderObj');
+                return;
+            }
+
+            programObj = webgl.createProgram(); //创建可执行文件 如: XX.exe
+
+            /*关联着色器*/
+            webgl.attachShader(programObj, vertexShaderObj);
+            webgl.attachShader(programObj, fragmentShaderObj);
+
+            /*给 v3Position 赋值*/
+            webgl.bindAttribLocation(programObj, v3PositionIndex, 'v3Position');
+
+
+            /*链接可执行文件*/
+            webgl.linkProgram(programObj);
+
+
+            /**/
+            if (!webgl.getProgramParameter(programObj, webgl.LINK_STATUS)) {
+                console.log('error:programObj');
+                return;
+            }
+
+
+            /*使用可执行文件*/
+            webgl.useProgram(programObj);
+
+            /*顶点数据 三角形*/
+            var _JSdata = new Float32Array([
+                0.0, 1.0, 0.0, //上顶点
+                1.0, 0.0, 0.0, //下左顶点
+                -1.0, -1.0, 0.0 //下右顶点
+            ]);
+
+            /*创建 数据缓冲区 */
+            triangleBuffer = webgl.createBuffer();
+            webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer); //存储顶点数据
+            webgl.bufferData(webgl.ARRAY_BUFFER, _JSdata, webgl.STATIC_DRAW); //上传数据
+
+            webgl.clearColor(0.0, 156 / 255.0, 200.0 / 255, 1.0); //设置背景颜色(R G B a) (不一定粉刷背景)
+            webgl.clear(webgl.COLOR_BUFFER_BIT); //背景清除 或 粉刷背景
+
+            // webgl.bindBuffer(webgl.ARRAY_BUFFER, triangleBuffer); //存储顶点数据
+
+            /*赋值*/
+
+            webgl.vertexAttribPointer(v3PositionIndex, 3, webgl.FLOAT, false, 0, 0);
+
+            webgl.enableVertexAttribArray(v3PositionIndex);
+            /*绘制*/
+            webgl.drawArrays(webgl.TRIANGLES, 0, 3);
+
+        }
+    </script>
+</head>
+
+<body onload="Inti()">
+    <canvas id="target">
+    </canvas>
+
+</body>
+
+</html>
