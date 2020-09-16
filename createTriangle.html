@@ -100,9 +100,9 @@
 
             /*顶点数据 三角形*/
             var _JSdata = new Float32Array([
-                0.0, 1.0, 0.0, //上顶点
-                1.0, 0.0, 0.0, //下左顶点
-                -1.0, -1.0, 0.0 //下右顶点
+                -0.5, 0.5, 0.0, 
+                0.5, 0.5, 0.0, 
+                0.5, -0.50, 0.0 ,
             ]);
 
             /*创建 数据缓冲区 */
@@ -121,7 +121,7 @@
 
             webgl.enableVertexAttribArray(v3PositionIndex);
             /*绘制*/
-            webgl.drawArrays(webgl.TRIANGLES, 0, 3);
+            webgl.drawArrays(webgl.TRIANGLES, 0, 6);
 
         }
     </script>
